@@ -5,4 +5,4 @@ from .models import Token
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
-        fields = ['media_url', 'owner']
+        fields = "__all__"
