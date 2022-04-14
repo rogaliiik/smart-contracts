@@ -11,7 +11,7 @@ def deploy():
     dotenv.load_dotenv('.env')
 
     # addr = '0xC7470fEb5Cba97862803418A570453558DFdA89d'
-    # PRIVATE_KEY = 'a6cd7ec077d04875ae6979f7fbc62dd3e1592019081110718886a5a15b68a298'
+
     # NODE_PROVIDER_LOCAL = 'https://speedy-nodes-nyc.moralis.io/f88b37d06c188b84b2db686c/eth/rinkeby'
 
     addr = os.getenv('ADDR')
