@@ -23,7 +23,7 @@ from .yasg import urlpatterns as doc_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('nft_drf.urls')),
+    path('', include('nft_drf.urls')),
 ]
 
 urlpatterns += doc_urls
