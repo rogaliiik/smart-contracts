@@ -1,6 +1,6 @@
 import os
+from rest_framework import viewsets
 from web3 import Web3
-from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from .serializers import TokenSerializer
 from .models import Token, _createHashId
@@ -9,24 +9,28 @@ import json
 
 
 class TokenAPICreate(APIView):
-    """Create a new token"""
+    """
+    Create a new token
+
+    Request accepts:
+    media_url -- link to media
+    owner -- owner's address
+    """
 
     def post(self, request):
         unique_hash = _createHashId().decode('utf-8')
         media_url = request.data['media_url']
         owner = request.data['owner']
-
         contract_address = os.environ['CONTRACT_MINT_ADDRESS']
         provider = os.environ['NODE_PROVIDER_LOCAL']
         with open('ABI.json', 'r') as file:
             contract_abi = json.load(file)
 
         w3 = Web3(Web3.HTTPProvider(provider))
-        myContract = w3.eth.contract(address=contract_address, abi=contract_abi)
-
+        my_contract = w3.eth.contract(address=contract_address, abi=contract_abi)
         nonce = w3.eth.get_transaction_count(owner)
 
-        txn = myContract.functions.mint(
+        txn = my_contract.functions.mint(
             owner=owner, uniqueHash=unique_hash, mediaURL=media_url
         ).buildTransaction({
             'chainId': 4,
@@ -52,14 +56,19 @@ class TokenAPICreate(APIView):
         return Response({'token': TokenSerializer(new_token).data})
 
 
-class TokenAPIList(ListAPIView):
-    """Show list of all tokens"""
+class TokenViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A viewset for listing token instances.
+    """
+
     queryset = Token.objects.all()
     serializer_class = TokenSerializer
 
 
 class TokenAPITotalSupply(APIView):
-    """Get total amount of tokens"""
+    """
+    Get total amount of tokens
+    """
 
     def get(self, request):
         contract_address = os.environ['CONTRACT_MINT_ADDRESS']
@@ -68,9 +77,9 @@ class TokenAPITotalSupply(APIView):
 
         with open('ABI.json', 'r') as file:
             contract_abi = json.load(file)
-        myContract = w3.eth.contract(address=contract_address, abi=contract_abi)
+        my_contract = w3.eth.contract(address=contract_address, abi=contract_abi)
 
-        name = myContract.functions.name().call()
-        symbol = myContract.functions.symbol().call()
-        totalSupply = myContract.functions.totalSupply().call()
-        return Response({'name': name, 'symbol': symbol, 'result': totalSupply})
+        name = my_contract.functions.name().call()
+        symbol = my_contract.functions.symbol().call()
+        total_supply = my_contract.functions.totalSupply().call()
+        return Response({'name': name, 'symbol': symbol, 'result': total_supply})
