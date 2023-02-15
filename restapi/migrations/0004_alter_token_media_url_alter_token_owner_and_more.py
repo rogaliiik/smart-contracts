@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('nft_drf', '0003_alter_token_media_url_alter_token_owner_and_more'),
+        ('restapi', '0003_alter_token_media_url_alter_token_owner_and_more'),
     ]
 
     operations = [
